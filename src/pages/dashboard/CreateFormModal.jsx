@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import Button from "../../components/buttons/Button";
 import FormPreviewPage from "./FormPreviewPage";
 import CreateFormFieldHeader from "../../components/dashboard/CreateFormFieldHeader";
@@ -37,7 +38,7 @@ export default function CreateFormModal({ isOpen, onClose, editingForm, }) {
                 )
             );
 
-            alert("Field updated successfully");
+            toast.success("Field updated successfully");
         } else {
             setFormFields((prev) => [
                 ...prev,
@@ -47,7 +48,7 @@ export default function CreateFormModal({ isOpen, onClose, editingForm, }) {
                 },
             ]);
 
-            alert("Field added successfully");
+            toast.success("Field added successfully");
         }
 
         setCurrentField({

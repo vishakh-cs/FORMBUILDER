@@ -12,6 +12,10 @@ const routes = [
         path: '/dashboard',
         element: <Dashboard />,
     },
+    //procted routes
+    // {
+    //    <proctedRoutes />>
+    // }
 ]
 
 export default function AppRoutes() {

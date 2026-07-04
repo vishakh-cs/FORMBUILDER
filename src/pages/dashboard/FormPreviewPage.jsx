@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export default function FormPreviewPage({ data, onclose }) {
     const [formValues, setFormValues] = useState({});
@@ -19,7 +20,7 @@ export default function FormPreviewPage({ data, onclose }) {
                 updatedAt: new Date().toISOString(),
             };
 
-            alert("Form updated successfully!");
+            toast.success("Form updated successfully!");
         } else {
             existingForms.push({
                 id: Date.now(),
@@ -28,7 +29,7 @@ export default function FormPreviewPage({ data, onclose }) {
                 fields: data,
             });
 
-            alert("Form created successfully!");
+            toast.success("Form created successfully!");
         }
 
         localStorage.setItem(
@@ -37,7 +38,9 @@ export default function FormPreviewPage({ data, onclose }) {
         );
 
         onclose(false);
-        window.location.reload();
+        window.setTimeout(() => {
+            window.location.reload();
+        }, 800);
     };
 
     const renderField = (field) => {
