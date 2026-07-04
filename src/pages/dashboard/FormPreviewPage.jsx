@@ -1,59 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 export default function FormPreviewPage({ data, onclose }) {
     const [formValues, setFormValues] = useState({});
     const [errors, setErrors] = useState({});
 
-    const validateForm = () => {
-        const newErrors = {};
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        data.forEach((field) => {
-            const value = formValues[field.id];
-
-            switch (field.type.toLowerCase()) {
-                case "text":
-                case "password":
-                case "textarea":
-                case "number":
-                case "dropdown":
-                    if (field.required && (!value || value.toString().trim() === "")) {
-                        newErrors[field.id] = `${field.name} is required`;
-                    }
-                    break;
-
-                case "email":
-                    if (field.required && (!value || value.trim() === "")) {
-                        newErrors[field.id] = `${field.name} is required`;
-                    } else if (value && !emailRegex.test(value.trim())) {
-                        newErrors[field.id] = "Please enter a valid email address.";
-                    }
-                    break;
-
-                case "checkbox":
-                    if (
-                        field.required &&
-                        (!value || (Array.isArray(value) && value.length === 0))
-                    ) {
-                        newErrors[field.id] = `Please select at least one option.`;
-                    }
-                    break;
-
-                default:
-                    break;
-            }
-        });
-
-        setErrors(newErrors);
-
-        return Object.keys(newErrors).length === 0;
-    };
-
     const handleCreateForm = () => {
-        // if (!validateForm()) {
-        //     return;
-        // }
-
         const existingForms =
             JSON.parse(localStorage.getItem("formFields")) || [];
 
@@ -86,6 +37,7 @@ export default function FormPreviewPage({ data, onclose }) {
         );
 
         onclose(false);
+        window.location.reload();
     };
 
     const renderField = (field) => {

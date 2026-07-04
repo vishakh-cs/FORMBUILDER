@@ -1,7 +1,31 @@
-import React from "react";
 import { requiredFormField } from "../../utils/FormFields";
 
-export default function RenderForms({ currentField, setCurrentField }) {
+export default function RenderForms({
+    currentField,
+    setCurrentField,
+    validationErrors = {},
+    setValidationErrors,
+}) {
+    const handleFieldChange = (key, value) => {
+        setCurrentField((prev) => ({
+            ...prev,
+            [key]: value,
+        }));
+
+        setValidationErrors?.((prev) => ({
+            ...prev,
+            [key]: "",
+        }));
+    };
+
+    const getInputClassName = (key) => {
+        const errorClass = validationErrors[key]
+            ? "border-red-500 focus:border-red-500"
+            : "border-gray-300 focus:border-blue-500";
+
+        return `w-full rounded-xl border p-3 focus:outline-none ${errorClass}`;
+    };
+
     return (
         <div className="p-6">
             <div className="space-y-6">
@@ -20,13 +44,8 @@ export default function RenderForms({ currentField, setCurrentField }) {
                                 type="text"
                                 placeholder={field.placeholder}
                                 value={currentField[field.key] ?? ""}
-                                onChange={(e) =>
-                                    setCurrentField((prev) => ({
-                                        ...prev,
-                                        [field.key]: e.target.value,
-                                    }))
-                                }
-                                className="w-full rounded-xl border border-gray-300 p-3 focus:border-blue-500 focus:outline-none"
+                                onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                                className={getInputClassName(field.key)}
                             />
                         )}
 
@@ -34,13 +53,8 @@ export default function RenderForms({ currentField, setCurrentField }) {
                         {field.type === "select" && (
                             <select
                                 value={currentField[field.key] ?? ""}
-                                onChange={(e) =>
-                                    setCurrentField((prev) => ({
-                                        ...prev,
-                                        [field.key]: e.target.value,
-                                    }))
-                                }
-                                className="w-full rounded-xl border border-gray-300 p-3"
+                                onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                                className={getInputClassName(field.key)}
                             >
                                 <option value="">Select</option>
 
@@ -58,13 +72,8 @@ export default function RenderForms({ currentField, setCurrentField }) {
                                 rows={4}
                                 placeholder={field.placeholder}
                                 value={currentField[field.key] ?? ""}
-                                onChange={(e) =>
-                                    setCurrentField((prev) => ({
-                                        ...prev,
-                                        [field.key]: e.target.value,
-                                    }))
-                                }
-                                className="w-full rounded-xl border border-gray-300 p-3 focus:border-blue-500 focus:outline-none"
+                                onChange={(e) => handleFieldChange(field.key, e.target.value)}
+                                className={getInputClassName(field.key)}
                             />
                         )}
 
@@ -74,12 +83,7 @@ export default function RenderForms({ currentField, setCurrentField }) {
                                 <input
                                     type="checkbox"
                                     checked={currentField[field.key] ?? false}
-                                    onChange={(e) =>
-                                        setCurrentField((prev) => ({
-                                            ...prev,
-                                            [field.key]: e.target.checked,
-                                        }))
-                                    }
+                                    onChange={(e) => handleFieldChange(field.key, e.target.checked)}
                                     className="h-5 w-5 accent-blue-600"
                                 />
                                 <span>Required</span>
@@ -97,18 +101,19 @@ export default function RenderForms({ currentField, setCurrentField }) {
                                     <input
                                         type="checkbox"
                                         checked={currentField.displayStatus}
-                                        onChange={(e) =>
-                                            setCurrentField((prev) => ({
-                                                ...prev,
-                                                displayStatus: e.target.checked,
-                                            }))
-                                        }
+                                        onChange={(e) => handleFieldChange("displayStatus", e.target.checked)}
                                         className="peer sr-only"
                                     />
 
                                     <div className="h-6 w-11 rounded-full bg-gray-300 transition peer-checked:bg-green-500 after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-all peer-checked:after:translate-x-5"></div>
                                 </label>
                             </div>
+                        )}
+
+                        {validationErrors[field.key] && (
+                            <p className="mt-2 text-sm font-medium text-red-600">
+                                {validationErrors[field.key]}
+                            </p>
                         )}
                     </div>
                 ))}
@@ -127,6 +132,7 @@ export default function RenderForms({ currentField, setCurrentField }) {
                                 <input
                                     type="text"
                                     value={option}
+                                    autoFocus
                                     placeholder={`Option ${index + 1}`}
                                     onChange={(e) => {
                                         const updatedOptions = [

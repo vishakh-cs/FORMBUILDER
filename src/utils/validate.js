@@ -1,29 +1,32 @@
 import { requiredFormField } from "./FormFields";
 
-export const validateField = (currentField) => {
+export const getFieldValidationErrors = (currentField) => {
+    const errors = {};
+
     for (const field of requiredFormField) {
         const value = currentField[field.key];
 
         if (field.required) {
             if (typeof value === "string" && !value.trim()) {
-                alert(`${field.label} is required`);
-                return false;
+                errors[field.key] = `${field.label} is required`;
+                continue;
             }
 
-            // Boolean validation
             if (typeof value === "boolean" && value === false) {
-                alert(`${field.label} is required`);
-                return false;
+                errors[field.key] = `${field.label} is required`;
+                continue;
             }
 
-            // Null / Undefined
             if (value === null || value === undefined) {
-                alert(`${field.label} is required`);
-                return false;
+                errors[field.key] = `${field.label} is required`;
             }
         }
     }
 
-    return true;
+    return errors;
+};
+
+export const validateField = (currentField) => {
+    return Object.keys(getFieldValidationErrors(currentField)).length === 0;
 };
 

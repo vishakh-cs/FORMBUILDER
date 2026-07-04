@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "../../components/buttons/Button";
-import { requiredFormField } from "../../utils/FormFields";
 import FormPreviewPage from "./FormPreviewPage";
 import CreateFormFieldHeader from "../../components/dashboard/CreateFormFieldHeader";
 import RenderForms from "./RenderForms";
-import { validateField } from "../../utils/validate";
+import { getFieldValidationErrors } from "../../utils/validate";
 
-export default function CreateFormModal({ isOpen, onClose ,   editingForm,}) {
+export default function CreateFormModal({ isOpen, onClose, editingForm, }) {
     const [currentField, setCurrentField] = useState({
         name: "",
         type: "",
@@ -17,21 +16,17 @@ export default function CreateFormModal({ isOpen, onClose ,   editingForm,}) {
     });
     const [isEditing, setIsEditing] = useState(false);
     const [editingId, setEditingId] = useState(null);
-    const [formFields, setFormFields] = useState([]);
+    const [formFields, setFormFields] = useState(() => editingForm?.fields || []);
     const [formPreview, setFormPreview] = useState(false)
+    const [validationErrors, setValidationErrors] = useState({});
 
     if (!isOpen) return null;
 
-    useEffect(() => {
-        if (editingForm) {
-            setFormFields(editingForm.fields);
-        } else {
-            setFormFields([]);
-        }
-    }, [editingForm]);
-
     const handleAddNewField = () => {
-        if (!validateField(currentField)) return;
+        const errors = getFieldValidationErrors(currentField);
+        setValidationErrors(errors);
+
+        if (Object.keys(errors).length > 0) return;
 
         if (isEditing) {
             setFormFields((prev) =>
@@ -66,6 +61,7 @@ export default function CreateFormModal({ isOpen, onClose ,   editingForm,}) {
 
         setIsEditing(false);
         setEditingId(null);
+        setValidationErrors({});
     };
 
     // const updateField = (id, key, value) => {
@@ -100,7 +96,12 @@ export default function CreateFormModal({ isOpen, onClose ,   editingForm,}) {
                             setEditingId={setEditingId}
                         />
 
-                        <RenderForms currentField={currentField} setCurrentField={setCurrentField} />
+                        <RenderForms
+                            currentField={currentField}
+                            setCurrentField={setCurrentField}
+                            validationErrors={validationErrors}
+                            setValidationErrors={setValidationErrors}
+                        />
 
                         {/* Footer */}
                         <div className="flex flex-col-reverse gap-3 border-t bg-gray-50 px-6 py-4 sm:flex-row sm:justify-end">
@@ -120,6 +121,7 @@ export default function CreateFormModal({ isOpen, onClose ,   editingForm,}) {
                                 {isEditing ? "Update Field" : "Add Field"}
                             </Button>
                             <Button
+                                disabled={formFields.length === 0}
                                 variant="primary"
                                 className="w-full sm:w-auto"
                                 onClick={handlePreview}

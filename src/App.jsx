@@ -1,15 +1,11 @@
-import React from 'react'
-import { AppRouter } from './routers'
-import { useRoutes } from 'react-router-dom'
+import { Suspense } from 'react'
+import AppRoutes from './routers'
+import Loader from './components/loader/Loader'
 
 export default function App() {
-
-  const AppRouterRoutes = ()=> {
-    const router = useRoutes(AppRouter)
-    return router
-  }
-
   return (
-   <AppRouterRoutes />
+    <Suspense fallback={<Loader />}>
+      <AppRoutes />
+    </Suspense>
   )
 }

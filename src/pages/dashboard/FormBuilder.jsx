@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../components/buttons/Button";
 import Header from "./Header";
 import CreateFormModal from "./CreateFormModal";
 import ListForms from "./ListForms";
+import { deleteFormFromStorage, getStoredForms } from "../../utils/helper.js";
 
 export default function FormBuilder() {
-    const [isLoading, setIsLoading] = useState(false)
-    const [forms, setForms] = useState([]);
+    const [isLoading] = useState(false)
+    const [forms, setForms] = useState(() => getStoredForms());
     const [openCreateFormModal, setOpenCreateFormModal] = useState(false)
     const [editingForm, setEditingForm] = useState(null);
     const [theme, setTheme] = useState("light")
@@ -14,17 +15,19 @@ export default function FormBuilder() {
 
     const handleCreateNewForm = () => {
         setEditingForm(null);
+
         setOpenCreateFormModal(true);
     };
     const handleEditForm = (form) => {
         setEditingForm(form);
         setOpenCreateFormModal(true);
     };
+    const handleDeleteForm = (id) => {
+        const updatedForms = deleteFormFromStorage(id);
 
-    useEffect(() => {
-        const storedForms = JSON.parse(localStorage.getItem("formFields")) || [];
-        setForms(storedForms);
-    }, []);
+        //
+        setForms(updatedForms);
+    };
 
     const toggleTheme = () => {
         setTheme((prev) => (prev === "light" ? "dark" : "light"));
@@ -58,8 +61,11 @@ export default function FormBuilder() {
 
                 {/* listing the form Fields */}
 
-
-                <ListForms forms={forms} onEdit={handleEditForm} />
+                <ListForms
+                    forms={forms}
+                    onEdit={handleEditForm}
+                    onDelete={handleDeleteForm}
+                />
             </div>
 
             {openCreateFormModal && (

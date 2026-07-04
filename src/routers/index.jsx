@@ -1,17 +1,19 @@
-import React from 'react'
-import { Navigate } from 'react-router-dom'
+import { lazy } from 'react'
+import { Navigate, useRoutes } from 'react-router-dom'
 
-const Dashboard = React.lazy(() => import('../pages/dashboard/FormBuilder'))
+const Dashboard = lazy(() => import('../pages/dashboard/FormBuilder'))
 
-export const AppRouter = [
-     {
+const routes = [
+    {
         path: '/',
-          element: <Navigate to="/dashboard" replace />,
-
-     }
-    ,{
+        element: <Navigate to="/dashboard" replace />,
+    },
+    {
         path: '/dashboard',
         element: <Dashboard />,
-    }
-
+    },
 ]
+
+export default function AppRoutes() {
+    return useRoutes(routes)
+}

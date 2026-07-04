@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function CreateFormFieldHeader({
     onClose,
     formFields,
@@ -70,7 +68,7 @@ export default function CreateFormFieldHeader({
                     </div>
                 ) : (
                     <div className="grid gap-4 md:grid-cols-2">
-                        {formFields.map((field, index) => (
+                        {formFields.map((field) => (
                             <div
                                 key={field.id}
                                 className="group flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-6 py-5 transition-all duration-200 hover:border-indigo-300 hover:shadow-md"
