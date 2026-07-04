@@ -1,0 +1,33 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-hover: var(--hover);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+
+}
+
+:root {
+  --primary: #f5f6fa;
+  --secondary: #fafafa;
+  --hover: #f6f6f6ef;
+  --accent: #484d57;
+  --muted: #505153;
+  --surface: #394e6a;
+
+}
+
+.dark {
+  --primary: #020917;
+  --secondary: #181a1e;
+  --hover: #242436;
+  --accent: #484d57;
+  --muted: #888b92;
+  --surface: #f1f2f4;
+
+}
